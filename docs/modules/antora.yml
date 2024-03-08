@@ -1,0 +1,10 @@
+name: wnp-setup
+title: WNP Setup
+version: 1.0
+start_page: introduction.adoc
+asciidoc:
+  attributes:
+    source-language: asciidoc@
+    table-caption: false
+nav:
+- modules/ROOT/nav.adoc

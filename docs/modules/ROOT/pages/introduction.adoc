@@ -1,0 +1,53 @@
+= Introduction =
+
+== Goal ==
+
+This document describes the steps needed to install the Wholesale Network Portal to run on top of Altiplano’s solution. +
+WNP is able to be deployed on Altiplano’ s Kubernetes using a single Helm Chart provided by the Condor team. This document is aligned with the “wholesale-network-portal-24.6.0-DRAFT.tgz” chart file. +
+The steps needed to install the WNP are: +
+
+* Make sure that all the prerequisites are covered (see section “Prerequisites”) 
+
+* Get images and chart from a registry
+
+* Configure values.yaml and the file corresponding to the mode (slice_mode.yaml or normal_mode.yaml)
+
+* Execute the helm command to install the WNP
+
+Once WNP is running on Kubernetes, services listed below will be available:
+
+* The REST API to configure the WNP
+
+* The UI that allows to configure the WNP
+
+* The IBN proxy that allows the VNOs to interact with Altiplano’ s IBN REST API in order to filter and apply the controls configured in WNP
+
+* The Alarms and PM REST Proxy that allows the VNOs to interact with Altiplano’s opensearch and opentsdb in order to filter and apply the controls configured in WNP
+
+* The Kafka processes for Alarms and PM that allows to filter the information, applying controls and then write events to a new VNO topic per VNO in Altiplano’s kafka
+
+//TODO: (luana) - LINKEAR A LA OTRA DOC DE SPEC
+For details about WNP architecture and design please refer to “Wholesale Network Portal - Specs”.
+
+== Glosary ==
+
+This section serves as a comprehensive reference guide to clarify the acronyms, abbreviations, and technical terminology used throughout this document. 
+
+WNP::
+Wholesale Network Portal
+
+INP::
+Infrastructure Network Provider, Open Access Provider, neutral host, FANS infrastructure provider, CSP offering wholesale.
+
+VNO::
+Virtual Network Provider, Customer Service Provider, Internet Service Provider
+
+IBN::
+Intent Based Networking
+
+PM::
+Performance Monitoring
+
+UI::
+User Interface
+

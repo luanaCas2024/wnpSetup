@@ -1,0 +1,215 @@
+= Description =
+
+== Prerequisites ==
+
+Before trying to deploy the WNP to Altiplano’s Kubernetes you need:
+
+* The WNP HELM CHART
+
+* The WNP Images available in a repository
+
+* The yaml file that allows configuring WNP for specific Altiplano’s setup. For detailed information please see section “Configuration”
+
+* A user with deployments permissions in Kubernetes and able to modify the ingress controller
+
+* A database called “app_mta” created on Altiplano’s MariaDB with the credentials mentioned in the "Database” section.
+
+== Configuration ==
+
+When installing the WNP, configuration from the “values.yaml” file inside CHART release is used. This file allows to set configurations that are needed by the Wholesale Network Portal to work properly.
+
+Configurations from the YAML file mentioned above are further described in the section below.
+
+=== values.yaml ===
+
+This file can be found inside the CHART. It is used as default and offers the following sections:
+
+==== imagePullSecrets ====
+
+Need to be configured only if the docker images registry is not public and requires login. In case of enabled=true the “config” attribute must contain the proper docker login credentials that allows connection to the registry.
+
+//TODO: (luana) - LINKEAR EN ESTE DOC A LA OTRA SECCION
+To configure and install using AWS registry please go to section “Appendix A - Using AWS registry ”
+
+==== Ingress ====
+
+This section allows configuring the Kubernetes ingress controller to redirect the request to the correct services. There is no need to change this configuration except for specific requirements.
+
+//TODO: (luana) - LINKEAR A LA OTRA DOC DE SPEC
+The WNP is composed of different services (Please refer to “Wholesale Network Portal - Specs” doc to know the architecture and design). Default path values for those services are:
+
+* /wnp-ac : Is the url used to access the REST API that allows to configure the WNP
+
+* /wnpWebapp: Is the url used to access the UI to configure the WNP
+
+* /wnp-indexsearch: Is the url to access the WNP service that acts as a proxy for VNOs to query Altiplano’s opensearch in order to get alarms
+
+* /wnp-opentsdb: Is the url to access the WNP service that acts as a proxy for VNOs to query Altiplano’s opentsdb in order to get alarms
+
+* /wnp-ibn: Is the url used to access the WNP service that acts as proxy to Altiplano’s Intent Based Networking interface
+
+==== Provisioning ====
+
+This section allows configuring the image that must be downloaded to install the WNP REST API and the UI module in Kubernetes.
+
+Also allows configuring the resources limits, the service settings, options to JVM process, and different Kubernetes probes.
+
+There is no need to change this configuration except for specific requirements. For example increasing memory or CPU to support more loadings.
+
+==== Ibn ====
+
+This section allows configuring the image that must be downloaded to install the WNP IBN Proxy module in Kubernetes.
+
+Also allows configuring the resources limits, the service settings, options to JVM process, and different kubernetes probes.
+
+There is no need to change this configuration except for specific requirements. For example increasing memory or cpu to support more loadings.
+
+==== alarmsPM ====
+
+This section allows configuring the image that must be downloaded to install the WNP PM and alarms proxy module in Kubernetes.
+
+Also allows configuring the resources limits, the service settings, options to JVM process, and different kubernetes probes.
+
+There is no need to change this configuration except for specific requirements. For example increasing memory or cpu to support more loadings.
+
+==== Kafka ====
+
+This section allows configuring the image that must be downloaded to install the WNP PM and alarms kafka  module in Kubernetes.
+
+Also allows configuring the resources limits, the service settings, options to JVM process, and different kubernetes probes.
+
+There is no need to change this configuration except for specific requirements. For example increasing memory or cpu to support more loadings.
+
+==== Config ====
+
+This section allows setting specific WNP configuration used by the WNP services.
+
+* ALTIPLANO_SERVER: Altiplano's public IP or Hostname that the WNP will use to call the available services.
+
+*  SHARED_MODE: It indicates when WNP is working with Altiplano’s slicing feature. Default value is "false" (Only change this value to true if Altiplano is working in slice mode).
+
+* SHARED_MODE_AC_URL: The URL of Altiplano’s INP access controller when working with slicing features. Default value is empty (""). (Only change this value if WNP must use a SHARED AC when slice mode is enabled).
+
+*  SHARED_MODE_SLICE_OWNER: It indicates Altiplano's slice owner name to be used by WNP when creating ont-connections. Default value is empty (" "). (Only change this value if WNP must use a vno owner when creating ont-connections).
+
+* ALTIPLANO_INTERNAL_USER: It is the username that must exist in Altiplano INP keycloak and will be used by WNP to access ont-connections elements that are present in SHARED AC and not in VNO AC. For example:  "customer" 
+
+* ALTIPLANO_INTERNAL_PASSWORD:  it is the password for the username configured previously that will be used by WNP to generate tokens in order to interact with the SHARED AC when needed
+
+* ALTIPLANO_AC_PATH_URL: Altiplano’s AC REST API path. Default value is "/nokia-altiplano-ac" (There is no need to change default value except Altiplano changes AC endpoint)
+
+* ALTIPLANO_OPENSEARCH_PATH_URL: Altiplano’s IndexSearch REST API path. Default value is "/altiplano-indexsearch" (There is no need to change default value except Altiplano changes OpenSearch endpoint)
+
+* ALTIPLANO_OPENTSDB_PATH_URL: Altiplano’s OpenTSDB REST API path. Default value is "/altiplano-opentsdb" (There is no need to change default value except Altiplano’s change OpenTSDB endpoint) 
+
+* LOGIN_PATH_URL: Altiplano’s AC login REST API path. Default value is "/rest/auth/login"  (There is no need to change default value except Altiplano changes login endpoint) 
+
+* REFRESH_LOGIN_PATH_URL: Altiplano’s AC refresh access token REST API path. Default value is "/rest/auth/refreshAccessToken"  (There is no need to change default value except Altiplano changes refresh token endpoint) 
+
+* ALTIPLANO_AUTHREALM_PATH_URL: Altiplano’s keycloak realm REST API path. Default value is "/altiplano-sso/realms/master" (There is no need to change default value except Altiplano changes keycloak configuration of the realms)
+
+//TODO: (luana) ESCAPAR LOS GUION BAJO
+* VNO_IDENTIFIER_REGEXP: The regular expression that defines the format of the VNO Identifier. The id is used to prefix the information to apply multi tenancy feature. Default value is "_[a-zA-Z]{3,3}$" that forces the INP to create VNO identifiers that start with "_" and finish with 3 chars. (There is no need to change default value except of special requirement)
+
+//TODO: (luana) ESCAPAR LOS GUION BAJO
+* USERNAME_REGEXP: The regular expression that defines the format of the VNO username. Default value is"^[a-zA-Z_]{1,10}[a-zA-Z_\\\\d]{0,10}$" (There is no need to change default value except of special requirement)
+
+* JWT_USERNAME_CLAIM: The claim key inside the JWT that will contain the username. This username is used by WNP to know which VNO is sending the request. Default value is "preferred_username".  (There is no need to change default value except Altiplano changes keycloak JWT configuration)
+
+* PREFIXED_INTENT_TYPES: The intent types that WNP will prefix with the VNO Identifier to apply the multi tenancy filters and controls. Each intent type must be separated with “;” character. Default value is: "ont;l2-user" (Only change this if there are different intent types to prefix where the WNP is installed)
+
+* PREFIXED_INTENT_TYPES_FIELDS: The attributes inside the intents that WNP will prefix with the VNO Identifier to apply the multi tenancy filters and controls. Each attribute must contain the intent type and the key. Also each element of the list must be separated with “;”. Default value is: "l2-user.user-device-name" (Only change this if there are different attributes of intent types to prefix where the WNP is installed)
+
+* KAFKA_CONCURRENCY_LISTENER: The number of threads that will use the WNP to listen to the Altiplano’s kafka events. Default value is: "1" (There is no need to change default value except of special requirement)
+
+* KAFKA_PRODUCER_TOPIC: The topic that WNP uses to write the filtered VNO alarms and is created on Altiplano’s Kafka server. Default value is "nokia-altiplano-alarm" (There is no need to change default value except of special requirement)
+
+* KAFKA_PRODUCER_SERVER: The Altiplano’s Kafka service that WNP uses to write the filtered VNO alarms. Default value is "altiplano-kafka-0-broker-external" (There is no need to change default value except of special requirement)
+
+*  KAFKA_PRODUCER_PORT: The Altiplano’s Kafka service port that WNP uses to write the filtered VNO alarms. Default value is "9093" (Do not need to change except of special requirement)
+
+*  KAFKA_CONSUMER_SERVER: The Altiplano’s Kafka service that WNP uses to consume the Altiplano alarms. Default value is "altiplano-kafka-0-broker-external"(There is no need to change default value except if Altiplano’s Kafka service name change)
+
+* KAFKA_CONSUMER_PORT: The Altiplano’s Kafka service port that WNP used to consume the Altiplano alarms. Default value is "9093"(There is no need to change default value except if Altiplano’s Kafka service port change)
+
+*  KAFKA_CONSUMER_GROUP_ID: The group id used by WNP to consume the alarms. Default value is "wholesale_kafka_group"  (There is no need to change default value except of special requirement)
+
+* KAFKA_CONSUMER_ALARM_TOPIC: the topic that WNP used to consume the Altiplano alarms that needs to be filtered per VNO. Default value is "nokia-altiplano-alarm" (There is no need to change default value except if Altiplano’s topic name changes)
+
+* KAFKA_CONSUMER_PM_TOPICS: the topics that WNP used to consume the Altiplano metrics that need to be filtered per VNO. Default value is "IPFIX-XPON" (There is no need to change default value except if Altiplano’s topic name change)
+
+* FLUENTD_LOG_HOST: The Altiplano’s Fluentd service that WNP uses to write logs. Default value is "altiplano-fluentd"(There is no need to change default value except if Altiplano’s Fluentd service name changes)
+
+==== Database ====
+
+This section allows configuring the image that must be downloaded to install the Database on Altiplano’s MariaDB.
+
+Database installation mode supports, normal mode, clean (deletes all tables before installing) or disabled. Default mode is: normal.
+
+Database upgrade mode supports, normal mode, clean (deletes all tables before upgrading) or disabled. Default mode is: normal.
+
+At the end of this section we can find the MariaDB information where to install the Metadata and data. Also the credentials needed to connect to MariaDB. Default values are:
+
+* host: "altiplano-mariadb"
+
+* name: "app_mta"
+
+* user: "app_mta"
+
+* password: "appMta@1233"
+
+== Installation ==
+
+//TODO: (luana) LINKEAR CON SECTION Configuration
+Before executing the installation command make sure that the correct values were configured at the values.yaml file . To know more details about this configuration please refer to the “Configuration” section.
+
+To start the installation process, the helm command that must be used is:
+
+[source,asciidoc]
+----
+helm install RELEASE_NAME WNP_CHART_LOCATION
+----
+
+Where: 
+WNP_CHART_LOCATION is the location of the HELM Chart. For example: wholesale-network-portal/
+
+Example:
+
+[source,asciidoc]
+----
+helm install condor wholesale-network-portal-24.6.0-DRAFT.tgz
+----
+
+== Upgrade ==
+
+To change any values of the WNP configuration a new yaml file can be passed as parameter to the helm install command:
+
+[source,asciidoc]
+----
+helm upgrade RELEASE_NAME -f NEW_CONFIG_FILE WNP_CHART_LOCATION
+----
+
+For example:
+[source,asciidoc]
+----
+helm upgrade condor -f new_values.yaml wholesale-network-portal-24.6.0-DRAFT.tgz
+----
+
+== Rollback previous version ==
+
+If there is need to rollback to previous version the following command can be used:
+
+[source,asciidoc]
+----
+helm rollback RELEASE_NAME [REVISION]
+----
+
+Note: This operation does not rollback the database.
+
+For example if we want to rollback after install revision 2 we can execute:
+[source,asciidoc]
+----
+helm rollback condor 1
+----
+
+

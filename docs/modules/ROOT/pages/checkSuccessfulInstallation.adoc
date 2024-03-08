@@ -1,0 +1,103 @@
+= Check Successful Installation =
+
+To check if the installation has finished successfully, you can create a user at Altiplano’s keycloak called “inp_admin”. This is the default and initial username that is created on WNP when installing.
+
+==  Check using a web browser ==
+
+Open a browser and access to https://ALTIPLANO_SERVER/wnpWebapp , where ALTIPLANO_SERVER must be replaced with the public IP or the hostname where Altiplano is installed.
+
+If the WNP was successfully installed, the following page must be shown:
+
+image:../images/wnpLogin.png[]
+
+If you have created the “inp_admin” user on Altiplano’s keycloak, then you can login to the system using the inp_admin username and password.
+
+==  Check using curl command ==
+
+To test the successful installation using command line, the following curl commands can be used:
+
+=== Get Token ===
+
+The first step is to generate a token through Altiplano’s keycloak using the following curl command:
+
+[source,asciidoc]
+----
+curl --location --request POST 'https://ALTIPLANO_SERVER/nokia-altiplano-ac/rest/auth/login' --insecure --header 'Authorization: Basic SEND_BASIC_AUTH_HERE' --data ''
+----
+
+The response will contain an access_token attribute that must be used as header in the next steps.
+
+To create the SEND_BASIC_AUTH_HERE value, you have to generate a base64 encoding of the username:password.
+
+For example: If the username is inp_admin and password is inp_admin_password, the result of encoding inp_admin:inp_admin_password is aW5wX2FkbWluOmlucF9hZG1pbg==
+
+You can encode and decode using the next site: https://www.base64encode.org/
+
+=== Add a VNO to WNP ====
+
+Test the WNP adding a new VNO using the following curl command:
+
+[source,asciidoc]
+----
+curl --location 'https://ALTIPLANO_SERVER/wnp-ac/vno' --insecure --header 'Content-Type: application/json' --header 'Authorization: Bearer TOKEN_FROM_STEP_1' --data '{"identifier": "_NEW","name": "New TEST VNO"}'
+----
+
+In case of successful execution, the response will contain the information of the created VNO as shown below:
+
+{"identifier":"_NEW","name":"New TEST VNO"}
+
+=== Get the VNOs from WNP ====
+
+Execute the following get method to check that the VNO was added:
+
+[source,asciidoc]
+----
+curl --location 'https://ALTIPLANO_SERVER/wnp-ac/vno' --insecure --header 'Authorization: Bearer TOKEN_FROM_STEP_1'
+----
+
+The response must contain the VNO created in the step two:
+
+[{"identifier":"_NEW","name":"New TEST VNO"}]
+
+==== Delete the VNO from WNP ====
+
+[source,asciidoc]
+----
+curl --location --request DELETE 'https://ALTIPLANO_SERVER/wnp-ac/vno/NEW' --insecure --header 'Authorization: Bearer TOKEN_FROM_STEP_1' --data ''
+----
+
+If the response is successful, a no content response is received.
+
+==== Check that the VNO was deleted ====
+
+[source,asciidoc]
+----
+curl --location 'https://ALTIPLANO_SERVER/wnp-ac/vno' --insecure --header 'Authorization: Bearer TOKEN_FROM_STEP_1'
+----
+
+The response must not contain the VNO created in the step two
+
+==  Check using Postman project attached ==
+
+This installation process is delivered with a postman project that contains basic requests to test the successful installation.  It contains a collection and an environment.
+
+Collection contains two folders: +
+* “Ping Test”: Contains ping commands to tests that each WNP module responds ok. Each request must receive a 200 OK response.
+* “ADD VNO Test”: Contains basic steps to create, list and delete a VNO using WNP REST API.
+
+Environment contains the following variables that must be configured before executing the requests:
+
+* altiplano-server-ip: It must be configured with the Altiplano’s public IP address
+* base-url-altiplano:  it must be configured with Atliplano’s AC base URL (Default: nokia-altiplano-ac)
+* username: It must be configured with the inp_admin value (because it is the default WNP user)
+* password: It must be configured with the inp_admin password configured at keycloak
+* access-token: It will be completed automatically after executing the “1-Get AccessToken INP” step.
+* refresh-token: It will be completed automatically after executing the “1-Get AccessToken INP” step.
+
+
+
+
+
+
+
+
