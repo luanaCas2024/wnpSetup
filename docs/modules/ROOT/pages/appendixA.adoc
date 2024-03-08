@@ -1,0 +1,65 @@
+= Appendix A - Using AWS registry =
+
+This section shows an example of the steps needed to use a registry from AWS. Please check the official and updated docs from AWS because it could contain modifications.
+
+== Steps ==
+
+. Installing the AWS CLI in Linux
++
+[source,asciidoc]
+----
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    unzip awscliv2.zip
+    sudo ./aws/install
+----
+
+. Download the csv that contains the accessKey
+    https://drive.google.com/file/d/1FHbHLF5ZuPQipu8_PEVspul9YoKrPL91/view?usp=sharing
+
+. Configure AWS with the credentials
++
+[source,asciidoc]
+----
+    aws configure import --csv file://registry-client_accessKeys.csv
+----
+
+. Login into Helm registry
++
+[source,asciidoc]
+----
+    aws ecr get-login-password --region us-east-1 --profile registry-client \
+       | helm registry login --username AWS --password-stdin \
+       288739758763.dkr.ecr.us-east-1.amazonaws.com
+----
+
+    Important: After login the session is established for 12 hours.
+
+. Pulling the chart
++
+[source,asciidoc]
+----
+    helm pull oci://288739758763.dkr.ecr.us-east-1.amazonaws.com/wholesale-network-portal --version 24.6.0-DRAFT
+----
+
+. Login to docker and configure the chart repository
++
+[source,asciidoc]
+----
+aws ecr get-login-password --region us-east-1 --profile registry-client | docker login --username AWS --password-stdin  288739758763.dkr.ecr.us-east-1.amazonaws.com && jq -r '.auths["288739758763.dkr.ecr.us-east-1.amazonaws.com"].auth' ~/.docker/config.json
+----
+
+. Copy the obtained token and configure the values.yml file
+====
+imagePullSecrets:
+  enabled: true
+  config: '{
+	"auths": {
+		"288739758763.dkr.ecr.us-east-1.amazonaws.com": { "auth":
+			"<token>"
+}
+}
+  } '
+image:
+  repository: 288739758763.dkr.ecr.us-east-1.amazonaws.com
+====
+

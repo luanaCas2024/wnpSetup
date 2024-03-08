@@ -1,0 +1,59 @@
+= Appendix B - WNP Exposed interfaces =
+
+When WNP is successfully installed, the following URLs are exposed:
+
+== WNP Web UI ==
+
+The UI allows an INP user to configure the WNP. To access it you must enter the following in a web browser:
+
+https://ALTIPLANO_SERVER/wnpWebapp 
+
+For example if Altiplano’s public IP is: 3.110.77.81 the WNP WEB UI  is available at:
+
+https://3.110.77..81/wnpWebapp
+
+== WNP AC (REST API) ==
+
+The WNP AC REST API allows an INP user to configure the WNP sending HTTP REST REQUEST. To access it you must use the following URL:
+
+https://ALTIPLANO_SERVER/wnp-ac
+
+For example if Altiplano’s public IP is: 3.110.77.81 the WNP AC is available at:
+
+https://3.110.77.81/wnp-ac
+
+== WNP Proxies ==
+
+As WNP acts as a proxy for Altiplano’s IBN, PM and alarms interfaces, the next interfaces are exposed:
+
+=== IBN ===
+
+To use the WNP interface that acts as a proxy for Altiplano’s REST IBN the following URL is exposed:
+
+https://ALTIPLANO_SERVER/wnp-ibn
+
+For example if Altiplano’s public IP is: 3.110.77.81 the WNP IBN Proxy is available at:
+
+https://3.110.77.81/wnp-ibn
+
+=== PM ===
+
+To use the WNP interface that acts as a proxy for Altiplano’s REST PM the following URL is exposed:
+
+https://ALTIPLANO_SERVER/wnp-opentsdb
+
+For example if Altiplano’s public IP is: 3.110.77.81 the WNP IBN Proxy is available at:
+
+https://3.110.77.81/wnp-opentsdb
+
+=== Alarms ===
+
+To use the WNP interface that acts as a proxy for Altiplano’s REST Alarms interface the following URL is exposed:
+
+https://ALTIPLANO_SERVER/wnp-indexsearch
+
+For example if Altiplano’s public IP is: 3.110.77.81 the WNP IBN Proxy is available at:
+
+https://3.110.77.81/wnp-indexsearch
+
+

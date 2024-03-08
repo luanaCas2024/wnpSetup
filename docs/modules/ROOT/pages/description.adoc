@@ -15,7 +15,7 @@ Before trying to deploy the WNP to Altiplano’s Kubernetes you need:
 * A database called “app_mta” created on Altiplano’s MariaDB with the credentials mentioned in the "Database” section.
 
 == Configuration ==
-
+[[configurationSection]]
 When installing the WNP, configuration from the “values.yaml” file inside CHART release is used. This file allows to set configurations that are needed by the Wholesale Network Portal to work properly.
 
 Configurations from the YAML file mentioned above are further described in the section below.
@@ -160,8 +160,7 @@ At the end of this section we can find the MariaDB information where to install 
 
 == Installation ==
 
-//TODO: (luana) LINKEAR CON SECTION Configuration
-Before executing the installation command make sure that the correct values were configured at the values.yaml file . To know more details about this configuration please refer to the “Configuration” section.
+Before executing the installation command make sure that the correct values were configured at the values.yaml file . To know more details about this configuration please refer to the <<configurationSection, *Configuration*>> section.
 
 To start the installation process, the helm command that must be used is:
 
