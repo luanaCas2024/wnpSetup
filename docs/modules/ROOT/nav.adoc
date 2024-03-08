@@ -1,3 +1,5 @@
 * xref:introduction.adoc[]
 * xref:description.adoc[]
 * xref:checkSuccessfulInstallation.adoc[]
+* xref:appendixA.adoc[]
+* xref:appendixB.adoc[]
