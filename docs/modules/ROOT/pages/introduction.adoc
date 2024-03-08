@@ -26,7 +26,7 @@ Once WNP is running on Kubernetes, services listed below will be available:
 
 * The Kafka processes for Alarms and PM that allows to filter the information, applying controls and then write events to a new VNO topic per VNO in Altiplano’s kafka
 
-//TODO: (luana) - LINKEAR A LA OTRA DOC DE SPEC
+//TODO: (luana) - LINKEAR AL OTRO MODULO DE DOCUMENTACION DE SPEC
 For details about WNP architecture and design please refer to “Wholesale Network Portal - Specs”.
 
 == Glosary ==

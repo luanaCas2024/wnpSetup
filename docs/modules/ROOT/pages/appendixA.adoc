@@ -1,3 +1,4 @@
+[[appendixASection]]
 = Appendix A - Using AWS registry =
 
 This section shows an example of the steps needed to use a registry from AWS. Please check the official and updated docs from AWS because it could contain modifications.

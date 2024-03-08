@@ -28,14 +28,15 @@ This file can be found inside the CHART. It is used as default and offers the fo
 
 Need to be configured only if the docker images registry is not public and requires login. In case of enabled=true the “config” attribute must contain the proper docker login credentials that allows connection to the registry.
 
-//TODO: (luana) - LINKEAR EN ESTE DOC A LA OTRA SECCION
-To configure and install using AWS registry please go to section “Appendix A - Using AWS registry ”
+//TODO: (luana) - Duda: ES CORRECTO EL LINK A OTRA PAGE ASI?
+To configure and install using AWS registry please go to section 
+xref:appendixA.adoc[Appendix A - Using AWS registry]
 
 ==== Ingress ====
 
 This section allows configuring the Kubernetes ingress controller to redirect the request to the correct services. There is no need to change this configuration except for specific requirements.
 
-//TODO: (luana) - LINKEAR A LA OTRA DOC DE SPEC
+//TODO: (luana) - LINKEAR AL OTRO MODULO DE DOCUMENTACION DE SPEC
 The WNP is composed of different services (Please refer to “Wholesale Network Portal - Specs” doc to know the architecture and design). Default path values for those services are:
 
 * /wnp-ac : Is the url used to access the REST API that allows to configure the WNP
@@ -108,10 +109,10 @@ This section allows setting specific WNP configuration used by the WNP services.
 
 * ALTIPLANO_AUTHREALM_PATH_URL: Altiplano’s keycloak realm REST API path. Default value is "/altiplano-sso/realms/master" (There is no need to change default value except Altiplano changes keycloak configuration of the realms)
 
-//TODO: (luana) ESCAPAR LOS GUION BAJO
-* VNO_IDENTIFIER_REGEXP: The regular expression that defines the format of the VNO Identifier. The id is used to prefix the information to apply multi tenancy feature. Default value is "_[a-zA-Z]{3,3}$" that forces the INP to create VNO identifiers that start with "_" and finish with 3 chars. (There is no need to change default value except of special requirement)
+//COMMENT: (luana) Con +_+ estoy escapando el _
+* VNO_IDENTIFIER_REGEXP: The regular expression that defines the format of the VNO Identifier. The id is used to prefix the information to apply multi tenancy feature. Default value is "+_+[a-zA-Z]{3,3}$" that forces the INP to create VNO identifiers that start with "+_+" and finish with 3 chars. (There is no need to change default value except of special requirement)
 
-//TODO: (luana) ESCAPAR LOS GUION BAJO
+//COMMENT: (luana) no es necesario escapar los caracteres
 * USERNAME_REGEXP: The regular expression that defines the format of the VNO username. Default value is"^[a-zA-Z_]{1,10}[a-zA-Z_\\\\d]{0,10}$" (There is no need to change default value except of special requirement)
 
 * JWT_USERNAME_CLAIM: The claim key inside the JWT that will contain the username. This username is used by WNP to know which VNO is sending the request. Default value is "preferred_username".  (There is no need to change default value except Altiplano changes keycloak JWT configuration)
